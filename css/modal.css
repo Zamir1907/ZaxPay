@@ -3,10 +3,18 @@
    Premium Modal Design | Glassmorphism | Smooth Transitions
    ======================================== */
 
+:root {
+    /* Inject Layer Z-Index variables if not defined */
+    --z-modal: 1000;
+    
+    /* Animation Easing Curves */
+    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* ----------------------------------------
    MODAL ROOT & BACKDROP
 ---------------------------------------- */
-
 .modal-root {
     position: fixed;
     top: 0;
@@ -15,24 +23,28 @@
     height: 100%;
     z-index: var(--z-modal);
     pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-root.active {
     pointer-events: auto;
 }
 
-/* Modal Backdrop */
+/* Modal Backdrop Layer */
 .modal-backdrop {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(5, 5, 8, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.25s var(--ease-in-out);
+    pointer-events: auto;
 }
 
 .modal-root.active .modal-backdrop {
@@ -40,488 +52,357 @@
 }
 
 /* ----------------------------------------
-   MODAL CONTAINER
+   MODAL CONTAINER LAYOUT
 ---------------------------------------- */
-
 .modal-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.95);
+    position: relative;
     width: 90%;
-    max-width: 480px;
+    max-width: 460px;
+    z-index: calc(var(--z-modal) + 1);
     opacity: 0;
-    transition: all 0.25s cubic-bezier(0.34, 1.2, 0.64, 1);
-    will-change: transform, opacity;
+    transform: scale(0.92);
+    transition: transform 0.3s var(--ease-out-back), opacity 0.25s var(--ease-in-out);
+    pointer-events: auto;
 }
 
 .modal-root.active .modal-container {
-    transform: translate(-50%, -50%) scale(1);
     opacity: 1;
+    transform: scale(1);
 }
 
 /* ----------------------------------------
-   MODAL CONTENT (GLASSMORPHISM)
+   MODAL CONTENT & GLASSMORPHISM
 ---------------------------------------- */
-
 .modal-content {
     background: var(--bg-glass-solid);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border-glass);
-    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--border-glass-hover);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 229, 255, 0.05);
     overflow: hidden;
-    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    display: flex;
+    flex-direction: column;
 }
 
-/* Modal Header */
+/* Header Component */
 .modal-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-lg) var(--spacing-xl);
-    border-bottom: 1px solid var(--border-glass);
-    background: rgba(0, 0, 0, 0.2);
+    align-items: center;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 .modal-title {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    font-size: var(--font-size-xl);
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
 }
 
 .modal-title i {
     color: var(--cyan-primary);
-    font-size: var(--font-size-xl);
+    filter: drop-shadow(0 0 8px var(--cyan-glow));
 }
 
+/* Close Button Interaction */
 .modal-close {
-    background: rgba(255, 255, 255, 0.05);
+    background: transparent;
     border: none;
     color: var(--text-secondary);
+    font-size: 1.15rem;
+    cursor: pointer;
     width: 36px;
     height: 36px;
-    border-radius: var(--border-radius-full);
-    cursor: pointer;
-    font-size: var(--font-size-lg);
-    transition: all var(--transition-fast);
+    border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .modal-close:hover {
-    background: rgba(255, 82, 82, 0.2);
-    color: var(--error);
-    transform: rotate(90deg);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
 }
 
-/* Modal Body */
+/* Body Component */
 .modal-body {
-    padding: var(--spacing-xl);
+    padding: var(--spacing-md);
+    max-height: 75vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-subtle) transparent;
 }
 
-/* Modal Footer */
+/* Footer Component */
 .modal-footer {
-    padding: var(--spacing-md) var(--spacing-xl);
-    border-top: 1px solid var(--border-glass);
-    background: rgba(0, 0, 0, 0.15);
-    font-size: var(--font-size-xs);
-    color: var(--text-tertiary);
-    text-align: center;
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: var(--spacing-sm);
-}
-
-.modal-footer i {
-    color: var(--cyan-dim);
+    align-items: center;
+    gap: 8px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid var(--border-subtle);
+    font-size: 12px;
+    color: var(--text-muted);
 }
 
 /* ----------------------------------------
-   QRIS MODAL SPECIFIC
+   METHOD DETAILS & DATA CONTAINERS
 ---------------------------------------- */
-
-.qris-container {
-    text-align: center;
-}
-
-.qris-image-wrapper {
-    background: var(--bg-primary);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
-    border: 1px solid var(--border-subtle);
-    position: relative;
-    overflow: hidden;
-}
-
-.qris-image {
-    width: 100%;
-    max-width: 280px;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-    border-radius: var(--border-radius-md);
-    transition: transform var(--transition-normal);
-    cursor: pointer;
-}
-
-.qris-image:hover {
-    transform: scale(1.02);
-}
-
-.qris-loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--cyan-primary);
-    font-size: var(--font-size-2xl);
-}
-
-.qris-instruction {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-md);
-    flex-wrap: wrap;
-    margin-top: var(--spacing-md);
-    padding: var(--spacing-md);
-    background: rgba(0, 229, 255, 0.05);
-    border-radius: var(--border-radius-lg);
-}
-
-.instruction-step {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    font-size: var(--font-size-sm);
-    color: var(--text-secondary);
-}
-
-.instruction-step i {
-    color: var(--cyan-primary);
-    font-size: var(--font-size-md);
-}
-
-.qris-nominal {
-    margin-top: var(--spacing-lg);
-    padding: var(--spacing-md);
-    background: rgba(0, 229, 255, 0.08);
-    border-radius: var(--border-radius-md);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    font-size: var(--font-size-sm);
-    color: var(--cyan-primary);
-}
-
-/* ----------------------------------------
-   DANA & SEABANK MODAL (NOMOR & COPY)
----------------------------------------- */
-
 .method-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
+    gap: var(--spacing-sm);
 }
 
 .method-icon-large {
-    width: 80px;
-    height: 80px;
-    background: rgba(0, 229, 255, 0.08);
-    border-radius: var(--border-radius-xl);
+    width: 72px;
+    height: 72px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin: 0 auto var(--spacing-lg);
-}
-
-.method-icon-large i {
-    font-size: 40px;
+    align-items: center;
+    font-size: 2rem;
     color: var(--cyan-primary);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
 }
 
 .method-name {
-    font-size: var(--font-size-xl);
-    font-weight: 600;
-    margin-bottom: var(--spacing-xs);
+    font-size: 1.4rem;
+    font-weight: 800;
 }
 
 .method-status {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
-    font-size: var(--font-size-xs);
+    gap: 6px;
+    font-size: 12px;
     color: var(--success);
-    background: rgba(0, 230, 118, 0.1);
-    padding: var(--spacing-xs) var(--spacing-md);
-    border-radius: var(--border-radius-full);
-    margin-bottom: var(--spacing-xl);
+    background: rgba(0, 230, 118, 0.06);
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(0, 230, 118, 0.15);
 }
 
 .method-status i {
-    font-size: 10px;
+    font-size: 8px;
 }
 
-/* Nomor Container */
+/* ----------------------------------------
+   NUMBER CONTAINER & COPY SYSTEM
+---------------------------------------- */
 .number-container {
-    background: var(--bg-secondary);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
+    width: 100%;
+    background: rgba(0, 0, 0, 0.25);
     border: 1px solid var(--border-subtle);
-    transition: all var(--transition-fast);
-}
-
-.number-container:hover {
-    border-color: var(--border-glass-hover);
-    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-top: var(--spacing-sm);
+    text-align: center;
 }
 
 .number-label {
-    font-size: var(--font-size-xs);
-    color: var(--text-tertiary);
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: var(--spacing-sm);
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
 }
 
 .number-value {
-    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    font-size: 1.35rem;
     font-weight: 700;
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    letter-spacing: 1px;
     color: var(--text-primary);
-    word-break: break-all;
+    letter-spacing: 0.5px;
 }
 
-/* Copy Button Premium */
+/* Action Button Copy */
 .copy-button {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    background: linear-gradient(135deg, var(--cyan-primary), var(--cyan-dim));
-    border: none;
+    width: 100%;
+    background: var(--cyan-primary);
     color: var(--bg-primary);
-    font-weight: 600;
-    padding: var(--spacing-md) var(--spacing-xl);
-    border-radius: var(--border-radius-full);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 14px;
+    font-size: 0.95rem;
+    font-weight: 700;
     cursor: pointer;
-    font-size: var(--font-size-md);
-    transition: all var(--transition-fast);
-    position: relative;
-    overflow: hidden;
-}
-
-.copy-button i {
-    font-size: var(--font-size-md);
-    transition: transform var(--transition-fast);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px var(--cyan-glow);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .copy-button:hover {
+    background: #FFFFFF;
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-glow-strong);
-}
-
-.copy-button:hover i {
-    transform: scale(1.1);
 }
 
 .copy-button:active {
     transform: translateY(0);
 }
 
-/* Copy Success State (ditambahkan via JS) */
+/* Success State Class Modifier */
 .copy-button.success {
-    background: linear-gradient(135deg, var(--success), var(--success-dim));
+    background: var(--success) !important;
+    box-shadow: 0 8px 24px var(--success-glow) !important;
+    color: #FFFFFF;
 }
 
-.copy-button.success i {
-    animation: scalePulse 0.3s ease-in-out;
+/* ----------------------------------------
+   QRIS INTERFACE ELEMENTS
+---------------------------------------- */
+.qris-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
 }
 
-.copy-button .button-text {
-    transition: all var(--transition-fast);
+.qris-image-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Info Tambahan */
-.info-note {
+.qris-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s var(--ease-out-back);
+}
+
+.qris-image-wrapper:hover .qris-image {
+    transform: scale(1.03);
+}
+
+/* Loading Spinner Inside QRIS Container */
+.qris-loading {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    z-index: 5;
+}
+
+/* Instruction Step Component */
+.qris-instruction {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-lg);
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-xs);
-    color: var(--text-tertiary);
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    gap: 8px;
+}
+
+.instruction-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    flex: 1;
+}
+
+.instruction-step i {
+    font-size: 1.1rem;
+    color: var(--cyan-primary);
+}
+
+.instruction-step span {
+    font-size: 10px;
+    color: var(--text-secondary);
+    line-height: 1.3;
+}
+
+.qris-instruction > i {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.qris-nominal {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 229, 255, 0.06);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--cyan-primary);
+    font-weight: 600;
+}
+
+/* ----------------------------------------
+   UTILITY INFO NOTES
+---------------------------------------- */
+.info-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: var(--radius-sm);
+    border-left: 2px solid var(--text-muted);
+    text-align: left;
+    width: 100%;
 }
 
 .info-note i {
-    color: var(--warning);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.info-note span {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
 }
 
 /* ----------------------------------------
-   MOBILE MODAL EMERGENCY FIX
+   CLOSING ANIMATIONS SYSTEM
 ---------------------------------------- */
-@media (max-width: 768px) {
-    .modal-container {
-        width: calc(100% - 2rem) !important;
-        max-width: none !important;
-        margin: 0 auto !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-    }
-    
-    .modal-content {
-        border-radius: 1rem !important;
-        max-height: 90vh !important;
-        overflow-y: auto !important;
-    }
-    
-    .modal-header {
-        padding: 0.75rem 1rem !important;
-        position: sticky !important;
-        top: 0 !important;
-        background: var(--bg-glass-solid) !important;
-        z-index: 10 !important;
-    }
-    
-    .modal-body {
-        padding: 1rem !important;
-        max-height: calc(90vh - 120px) !important;
-        overflow-y: auto !important;
-    }
-    
-    .modal-footer {
-        padding: 0.75rem 1rem !important;
-        position: sticky !important;
-        bottom: 0 !important;
-        background: var(--bg-glass-solid) !important;
-    }
-    
-    /* QRIS image fix */
-    .qris-image-wrapper {
-        padding: 1rem !important;
-    }
-    
-    .qris-image {
-        max-width: 200px !important;
-        width: 100% !important;
-        height: auto !important;
-    }
-    
-    .qris-instruction {
-        flex-direction: column !important;
-        gap: 0.5rem !important;
-    }
-    
-    .instruction-step {
-        font-size: 0.75rem !important;
-    }
-    
-    .fa-arrow-right {
-        transform: rotate(90deg) !important;
-    }
-    
-    /* Number container fix */
-    .number-container {
-        padding: 0.75rem !important;
-    }
-    
-    .number-value {
-        font-size: 0.875rem !important;
-        word-break: break-all !important;
-    }
-    
-    .copy-button {
-        width: 100% !important;
-        justify-content: center !important;
-        padding: 0.75rem !important;
-    }
-    
-    /* Method icon fix */
-    .method-icon-large {
-        width: 60px !important;
-        height: 60px !important;
-    }
-    
-    .method-icon-large i {
-        font-size: 28px !important;
-    }
-}
-
-/* ----------------------------------------
-   MODAL ANIMATION OVERRIDES
-   (menggunakan animation dari animation.css)
----------------------------------------- */
-
-.modal-root.active .modal-container {
-    animation: scaleBounce 0.3s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+.modal-root.closing .modal-backdrop {
+    opacity: 0 !important;
 }
 
 .modal-root.closing .modal-container {
-    animation: scaleOut 0.2s ease forwards;
-}
-
-.modal-root.closing .modal-backdrop {
-    animation: fadeOut 0.2s ease forwards;
-}
-
-/* ----------------------------------------
-   DISABLE SCROLL SAAT MODAL BUKA
----------------------------------------- */
-
-body.modal-open {
-    overflow: hidden;
-    padding-right: var(--scrollbar-width, 0px);
+    transform: scale(0.95);
+    opacity: 0 !important;
+    transition: transform 0.2s var(--ease-in-out), opacity 0.2s var(--ease-in-out);
 }
 
 /* ----------------------------------------
-   QRIS ZOOM ON HOVER (PREMIUM TOUCH)
+   ACCESSIBILITY FOCUS UTILITIES
 ---------------------------------------- */
-
-.qris-zoom-effect {
-    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-}
-
-.qris-zoom-effect:hover {
-    transform: scale(1.02);
-}
-
-/* ----------------------------------------
-   FOCUS STYLES FOR ACCESSIBILITY
----------------------------------------- */
-
 .copy-button:focus-visible,
 .modal-close:focus-visible {
     outline: 2px solid var(--cyan-primary);
     outline-offset: 2px;
-}
-
-/* ----------------------------------------
-   SMOOTH SCROLLING INSIDE MODAL
----------------------------------------- */
-
-.modal-body {
-    max-height: 70vh;
-    overflow-y: auto;
-    scrollbar-width: thin;
-}
-
-.modal-body::-webkit-scrollbar {
-    width: 4px;
-}
-
-.modal-body::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-}
-
-.modal-body::-webkit-scrollbar-thumb {
-    background: var(--cyan-dim);
-    border-radius: var(--border-radius-full);
 }
