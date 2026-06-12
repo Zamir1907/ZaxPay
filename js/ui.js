@@ -441,7 +441,18 @@
         dom.otherPanel = document.getElementById('otherMethodsPanel');
         dom.panelCloseBtn = document.getElementById('panelCloseBtn');
         dom.body = document.body;
-        
+
+// Sinkronisasi pembaruan tanggal otomatis secara asinkronus
+    const lastUpdatedSpan = document.getElementById('lastUpdated');
+    if (lastUpdatedSpan) {
+        const date = new Date();
+        lastUpdatedSpan.textContent = date.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    }
+       
         if (!dom.modalRoot) console.warn('Modal root not found');
         if (!dom.toastRoot) console.warn('Toast root not found');
         
