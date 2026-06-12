@@ -9,26 +9,21 @@
 
     <title>Zax Payment | Pembayaran Resmi</title>
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- CSS -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/animation.css">
     <link rel="stylesheet" href="css/modal.css">
 </head>
 <body>
 
-    <!-- Background -->
     <div class="bg-gradient" aria-hidden="true"></div>
 
-    <!-- Main Container -->
     <main class="payment-center">
 
-        <!-- Header -->
         <header class="header">
             <div class="header-badge glass">
-                <i class="fas fa-shield-check"></i>
+                <i class="fas fa-shield-halved"></i>
                 <span>Zax Payment</span>
             </div>
 
@@ -43,10 +38,8 @@
             </p>
         </header>
 
-        <!-- Payment Methods -->
         <div class="methods-grid">
 
-            <!-- QRIS -->
             <div class="method-card premium" data-method="qris">
                 <div class="card-badge">Rekomendasi</div>
 
@@ -69,7 +62,6 @@
                 <div class="card-hover-glow"></div>
             </div>
 
-            <!-- DANA -->
             <div class="method-card" data-method="dana">
 
                 <div class="card-icon-wrapper">
@@ -91,7 +83,6 @@
                 <div class="card-hover-glow"></div>
             </div>
 
-            <!-- SeaBank -->
             <div class="method-card" data-method="seabank">
 
                 <div class="card-icon-wrapper">
@@ -113,7 +104,6 @@
                 <div class="card-hover-glow"></div>
             </div>
 
-            <!-- Other -->
             <div class="method-card method-other-wrapper" data-method="other">
 
                 <div class="card-icon-wrapper">
@@ -136,7 +126,6 @@
 
         </div>
 
-        <!-- Other Methods Panel -->
         <div class="other-methods-panel" id="otherMethodsPanel">
 
             <div class="panel-header">
@@ -206,7 +195,6 @@
             </p>
         </div>
 
-        <!-- Footer -->
         <footer class="footer">
 
             <div class="footer-divider"></div>
@@ -234,33 +222,13 @@
 
     </main>
 
-    <!-- Modal Root -->
     <div id="modalRoot" class="modal-root"></div>
 
-    <!-- Toast Root -->
     <div id="toastRoot" class="toast-root"></div>
 
-    <!-- Scripts -->
     <script defer src="js/toast.js"></script>
     <script defer src="js/copy.js"></script>
     <script defer src="js/ui.js"></script>
-
-    <script>
-        (() => {
-            const lastUpdatedSpan = document.getElementById('lastUpdated');
-
-            if (lastUpdatedSpan) {
-                const date = new Date();
-
-                lastUpdatedSpan.textContent =
-                    date.toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                    });
-            }
-        })();
-    </script>
 
 </body>
 </html>
