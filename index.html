@@ -2,238 +2,889 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <meta name="description" content="Payment Center - Informasi metode pembayaran resmi">
     <meta name="theme-color" content="#0A0A0F">
     
     <title>Payment Center | Metode Pembayaran Resmi</title>
     
-    <!-- Font Awesome 6 (Free CDN) -->
+    <!-- Font Awesome 6 (CDN alternatif lebih stabil) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <!-- CSS Modules -->
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/animation.css">
-    <link rel="stylesheet" href="css/modal.css">
+    <!-- Google Font Inter untuk backup -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           EMERGENCY CSS - LANGSUNG DI HTML
+           ======================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0A0A0F;
+            color: #FFFFFF;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        /* Container utama */
+        .payment-center {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(18, 18, 26, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 100px;
+            border: 1px solid rgba(0, 229, 255, 0.15);
+            font-size: 13px;
+            color: #00E5FF;
+            margin-bottom: 20px;
+        }
+        
+        .header-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #A0A0B0 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .title-accent {
+            background: linear-gradient(135deg, #00E5FF 0%, #0088AA 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header-subtitle {
+            color: #A0A0B0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* GRID - PAKSA 2 KOLOM DI DESKTOP, 1 KOLOM DI MOBILE */
+        .methods-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        /* CARD STYLE */
+        .method-card {
+            background: linear-gradient(135deg, rgba(18, 18, 26, 0.9) 0%, rgba(12, 12, 18, 0.95) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        
+        .method-card.premium {
+            border-color: rgba(0, 229, 255, 0.2);
+            background: linear-gradient(135deg, rgba(18, 18, 26, 0.95) 0%, rgba(0, 229, 255, 0.05) 100%);
+        }
+        
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #00E5FF, #0088AA);
+            color: #0A0A0F;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 100px;
+            text-transform: uppercase;
+        }
+        
+        .card-icon-wrapper {
+            width: 56px;
+            height: 56px;
+            background: rgba(0, 229, 255, 0.08);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        .card-icon-wrapper i {
+            font-size: 28px;
+            color: #00E5FF;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .card-description {
+            color: #A0A0B0;
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+        
+        .card-footer {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .pill-tag {
+            background: #1A1A24;
+            color: #6A6A7A;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+        
+        .pill-tag.coming-soon {
+            background: rgba(255, 179, 0, 0.1);
+            color: #FFB300;
+        }
+        
+        /* Other Methods Panel */
+        .other-methods-panel {
+            display: none;
+            background: rgba(18, 18, 26, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 229, 255, 0.15);
+            border-radius: 20px;
+            margin-top: 16px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        
+        .other-methods-panel.active {
+            display: block;
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+        }
+        
+        .panel-header i:first-child {
+            color: #00E5FF;
+            font-size: 20px;
+        }
+        
+        .panel-header span {
+            flex: 1;
+            font-weight: 600;
+        }
+        
+        .panel-close {
+            background: none;
+            border: none;
+            color: #6A6A7A;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .other-methods-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding: 20px;
+        }
+        
+        .other-method-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #12121A;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .other-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .other-icon i {
+            font-size: 22px;
+            color: #6A6A7A;
+        }
+        
+        .other-info {
+            flex: 1;
+        }
+        
+        .other-info h4 {
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .other-info p {
+            font-size: 11px;
+            color: #6A6A7A;
+        }
+        
+        .coming-soon-badge {
+            background: rgba(255, 179, 0, 0.1);
+            padding: 4px 8px;
+            border-radius: 100px;
+            font-size: 10px;
+            color: #FFB300;
+        }
+        
+        .panel-footer-note {
+            padding: 12px 20px;
+            border-top: 1px solid rgba(0, 229, 255, 0.1);
+            font-size: 12px;
+            color: #6A6A7A;
+            text-align: center;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 24px;
+            text-align: center;
+        }
+        
+        .footer-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.2), transparent);
+            margin-bottom: 20px;
+        }
+        
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #6A6A7A;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .security-badge i {
+            color: #00E676;
+        }
+        
+        .footer-updated, .footer-copyright {
+            color: #6A6A7A;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+        
+        /* MODAL STYLES (Emergency) */
+        .modal-root {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .modal-root.active {
+            display: block;
+        }
+        
+        .modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+        }
+        
+        .modal-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% - 32px);
+            max-width: 400px;
+            background: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+        }
+        
+        .modal-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .modal-title i {
+            color: #00E5FF;
+        }
+        
+        .modal-close {
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: #A0A0B0;
+            width: 32px;
+            height: 32px;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 12px 20px;
+            border-top: 1px solid rgba(0, 229, 255, 0.1);
+            font-size: 11px;
+            color: #6A6A7A;
+            text-align: center;
+        }
+        
+        /* QRIS */
+        .qris-image-wrapper {
+            text-align: center;
+            background: #0A0A0F;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .qris-image {
+            max-width: 200px;
+            width: 100%;
+            height: auto;
+        }
+        
+        .qris-instruction {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        
+        .instruction-step {
+            font-size: 11px;
+            color: #A0A0B0;
+        }
+        
+        /* Number & Copy */
+        .method-detail {
+            text-align: center;
+        }
+        
+        .method-icon-large {
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 229, 255, 0.08);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        
+        .method-icon-large i {
+            font-size: 32px;
+            color: #00E5FF;
+        }
+        
+        .method-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .method-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #00E676;
+            background: rgba(0, 230, 118, 0.1);
+            padding: 4px 12px;
+            border-radius: 100px;
+            margin-bottom: 20px;
+        }
+        
+        .number-container {
+            background: #12121A;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .number-value {
+            font-size: 16px;
+            font-weight: 700;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        
+        .copy-button {
+            background: linear-gradient(135deg, #00E5FF, #0088AA);
+            border: none;
+            color: #0A0A0F;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 100px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        .info-note {
+            margin-top: 16px;
+            font-size: 11px;
+            color: #6A6A7A;
+        }
+        
+        /* TOAST */
+        #toastRoot {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 1100;
+        }
+        
+        .toast-notification {
+            background: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(16px);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+        
+        .toast-success i { color: #00E676; }
+        .toast-error i { color: #FF5252; }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Desktop */
+        @media (min-width: 768px) {
+            .payment-center {
+                padding: 40px 32px;
+            }
+            
+            .methods-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 24px;
+            }
+            
+            .header-title {
+                font-size: 42px;
+            }
+            
+            #toastRoot {
+                left: auto;
+                right: 20px;
+                bottom: 20px;
+                max-width: 360px;
+            }
+        }
+        
+        /* Active/Hover */
+        .method-card:active {
+            transform: scale(0.98);
+        }
+        
+        @media (hover: hover) {
+            .method-card:hover {
+                transform: translateY(-4px);
+                border-color: rgba(0, 229, 255, 0.3);
+            }
+        }
+        
+        .copy-button:active {
+            transform: scale(0.97);
+        }
+    </style>
 </head>
 <body>
+
+<div class="payment-center">
     
-    <!-- Background Gradient untuk atmosfer premium -->
-    <div class="bg-gradient" aria-hidden="true"></div>
+    <header class="header">
+        <div class="header-badge">
+            <i class="fas fa-shield-alt"></i>
+            <span>Payment Center Resmi</span>
+        </div>
+        <h1 class="header-title">
+            Metode Pembayaran
+            <span class="title-accent">Premium</span>
+        </h1>
+        <p class="header-subtitle">
+            Pilih metode pembayaran yang tersedia<br>
+            Informasi akan ditampilkan setelah pemilihan
+        </p>
+    </header>
     
-    <!-- Main Container -->
-    <main class="payment-center">
+    <div class="methods-grid">
         
-        <!-- Header Section -->
-        <header class="header">
-            <div class="header-badge glass">
-                <i class="fas fa-shield-alt"></i>
-                <span>Payment Center Resmi</span>
+        <!-- QRIS Card -->
+        <div class="method-card premium" data-method="qris">
+            <div class="card-badge">Rekomendasi</div>
+            <div class="card-icon-wrapper">
+                <i class="fas fa-qrcode"></i>
             </div>
-            <h1 class="header-title">
-                Metode Pembayaran
-                <span class="title-accent">Premium</span>
-            </h1>
-            <p class="header-subtitle">
-                Pilih metode pembayaran yang tersedia<br>
-                Informasi akan ditampilkan setelah pemilihan
-            </p>
-        </header>
-        
-        <!-- Payment Methods Grid -->
-        <div class="methods-grid">
-            
-            <!-- Card: QRIS (Priority) -->
-            <div class="method-card premium" data-method="qris">
-                <div class="card-badge">Rekomendasi</div>
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-qrcode"></i>
-                </div>
-                <h3 class="card-title">QRIS</h3>
-                <p class="card-description">Scan menggunakan aplikasi<br>bank atau e-wallet kesayangan Anda</p>
-                <div class="card-footer">
-                    <span class="pill-tag">Instant</span>
-                    <span class="pill-tag">All Bank</span>
-                </div>
-                <div class="card-hover-glow"></div>
+            <h3 class="card-title">QRIS</h3>
+            <p class="card-description">Scan menggunakan aplikasi<br>bank atau e-wallet</p>
+            <div class="card-footer">
+                <span class="pill-tag">Instant</span>
+                <span class="pill-tag">All Bank</span>
             </div>
-            
-            <!-- Card: DANA -->
-            <div class="method-card" data-method="dana">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-wallet"></i>
-                </div>
-                <h3 class="card-title">DANA</h3>
-                <p class="card-description">Dompet digital<br>pilihan utama</p>
-                <div class="card-footer">
-                    <span class="pill-tag">E-Wallet</span>
-                    <span class="pill-tag">24 Jam</span>
-                </div>
-                <div class="card-hover-glow"></div>
-            </div>
-            
-            <!-- Card: SeaBank -->
-            <div class="method-card" data-method="seabank">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-university"></i>
-                </div>
-                <h3 class="card-title">SeaBank</h3>
-                <p class="card-description">Transfer Bank<br>cepat dan aman</p>
-                <div class="card-footer">
-                    <span class="pill-tag">Bank Transfer</span>
-                    <span class="pill-tag">Instant</span>
-                </div>
-                <div class="card-hover-glow"></div>
-            </div>
-            
-            <!-- Card: Metode Lainnya (Expandable) -->
-            <div class="method-card method-other-wrapper" data-method="other">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
-                <h3 class="card-title">Metode Lainnya</h3>
-                <p class="card-description">Klik untuk melihat<br>opsi pembayaran tambahan</p>
-                <div class="card-footer">
-                    <span class="pill-tag coming-soon">Coming Soon</span>
-                </div>
-                <div class="card-hover-glow"></div>
-            </div>
-            
         </div>
         
-        <!-- Expandable Section untuk Metode Lainnya -->
-        <div class="other-methods-panel" id="otherMethodsPanel">
-            <div class="panel-header">
-                <i class="fas fa-credit-card"></i>
-                <span>Metode Pembayaran Tambahan</span>
-                <button class="panel-close" id="panelCloseBtn" aria-label="Tutup panel">
-                    <i class="fas fa-times"></i>
-                </button>
+        <!-- DANA Card -->
+        <div class="method-card" data-method="dana">
+            <div class="card-icon-wrapper">
+                <i class="fas fa-wallet"></i>
             </div>
-            <div class="other-methods-grid">
-                
-                <!-- Bank Transfer (Coming Soon) -->
-                <div class="other-method-item disabled" data-method="bank_transfer">
-                    <div class="other-icon">
-                        <i class="fas fa-building-columns"></i>
-                    </div>
-                    <div class="other-info">
-                        <h4>Bank Transfer</h4>
-                        <p>BCA, Mandiri, BNI, BRI</p>
-                    </div>
-                    <div class="coming-soon-badge">
-                        <i class="fas fa-clock"></i>
-                        <span>Segera</span>
-                    </div>
-                </div>
-                
-                <!-- E-Wallet (Coming Soon) -->
-                <div class="other-method-item disabled" data-method="ewallet">
-                    <div class="other-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="other-info">
-                        <h4>E-Wallet Lainnya</h4>
-                        <p>OVO, GoPay, LinkAja</p>
-                    </div>
-                    <div class="coming-soon-badge">
-                        <i class="fas fa-clock"></i>
-                        <span>Segera</span>
-                    </div>
-                </div>
-                
-                <!-- Virtual Account (Coming Soon) -->
-                <div class="other-method-item disabled" data-method="va">
-                    <div class="other-icon">
-                        <i class="fas fa-receipt"></i>
-                    </div>
-                    <div class="other-info">
-                        <h4>Virtual Account</h4>
-                        <p>Permata, Mandiri, BCA VA</p>
-                    </div>
-                    <div class="coming-soon-badge">
-                        <i class="fas fa-clock"></i>
-                        <span>Segera</span>
-                    </div>
-                </div>
-                
+            <h3 class="card-title">DANA</h3>
+            <p class="card-description">Dompet digital<br>pilihan utama</p>
+            <div class="card-footer">
+                <span class="pill-tag">E-Wallet</span>
+                <span class="pill-tag">24 Jam</span>
             </div>
-            <p class="panel-footer-note">
-                <i class="fas fa-info-circle"></i>
-                Metode pembayaran tambahan akan segera hadir
-            </p>
         </div>
         
-        <!-- Footer Info -->
-        <footer class="footer">
-            <div class="footer-divider"></div>
-            <div class="footer-content">
-                <div class="security-badge">
-                    <i class="fas fa-lock"></i>
-                    <span>Informasi Pembayaran Resmi</span>
-                </div>
-                <p class="footer-updated">
-                    <i class="fas fa-sync-alt"></i>
-                    Terakhir diperbarui: <span id="lastUpdated">Januari 2026</span>
-                </p>
-                <p class="footer-copyright">
-                    &copy; 2026 Payment Center
-                </p>
+        <!-- SeaBank Card -->
+        <div class="method-card" data-method="seabank">
+            <div class="card-icon-wrapper">
+                <i class="fas fa-university"></i>
             </div>
-        </footer>
+            <h3 class="card-title">SeaBank</h3>
+            <p class="card-description">Transfer Bank<br>cepat dan aman</p>
+            <div class="card-footer">
+                <span class="pill-tag">Bank Transfer</span>
+                <span class="pill-tag">Instant</span>
+            </div>
+        </div>
         
-    </main>
+        <!-- Metode Lainnya Card -->
+        <div class="method-card" data-method="other">
+            <div class="card-icon-wrapper">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+            <h3 class="card-title">Metode Lainnya</h3>
+            <p class="card-description">Klik untuk melihat<br>opsi pembayaran tambahan</p>
+            <div class="card-footer">
+                <span class="pill-tag coming-soon">Coming Soon</span>
+            </div>
+        </div>
+        
+    </div>
     
-    <!-- Modal Root (Container untuk modal dinamis) -->
-    <div id="modalRoot" class="modal-root"></div>
+    <!-- Other Methods Panel -->
+    <div class="other-methods-panel" id="otherMethodsPanel">
+        <div class="panel-header">
+            <i class="fas fa-credit-card"></i>
+            <span>Metode Pembayaran Tambahan</span>
+            <button class="panel-close" id="panelCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="other-methods-grid">
+            <div class="other-method-item disabled">
+                <div class="other-icon"><i class="fas fa-building-columns"></i></div>
+                <div class="other-info">
+                    <h4>Bank Transfer</h4>
+                    <p>BCA, Mandiri, BNI, BRI</p>
+                </div>
+                <div class="coming-soon-badge"><i class="fas fa-clock"></i> Segera</div>
+            </div>
+            <div class="other-method-item disabled">
+                <div class="other-icon"><i class="fas fa-mobile-alt"></i></div>
+                <div class="other-info">
+                    <h4>E-Wallet Lainnya</h4>
+                    <p>OVO, GoPay, LinkAja</p>
+                </div>
+                <div class="coming-soon-badge"><i class="fas fa-clock"></i> Segera</div>
+            </div>
+            <div class="other-method-item disabled">
+                <div class="other-icon"><i class="fas fa-receipt"></i></div>
+                <div class="other-info">
+                    <h4>Virtual Account</h4>
+                    <p>Permata, Mandiri, BCA VA</p>
+                </div>
+                <div class="coming-soon-badge"><i class="fas fa-clock"></i> Segera</div>
+            </div>
+        </div>
+        <div class="panel-footer-note">
+            <i class="fas fa-info-circle"></i> Metode pembayaran tambahan akan segera hadir
+        </div>
+    </div>
     
-    <!-- Toast Root (Container untuk notifikasi) -->
-    <div id="toastRoot" class="toast-root"></div>
+    <footer class="footer">
+        <div class="footer-divider"></div>
+        <div class="security-badge">
+            <i class="fas fa-lock"></i>
+            <span>Informasi Pembayaran Resmi</span>
+        </div>
+        <p class="footer-updated">
+            <i class="fas fa-sync-alt"></i>
+            Terakhir diperbarui: <span id="lastUpdated">13 Juni 2026</span>
+        </p>
+        <p class="footer-copyright">© 2026 Payment Center</p>
+    </footer>
     
-    <!-- JavaScript Modules -->
-<!-- Debug overlay untuk mobile (hapus setelah fix) -->
+</div>
+
+<div id="modalRoot" class="modal-root"></div>
+<div id="toastRoot"></div>
+
 <script>
+// ========================================
+// SIMPLE TOAST
+// ========================================
 (function() {
-    if (window.innerWidth <= 768) {
-        console.log('📱 Mobile mode aktif - Width:', window.innerWidth);
+    window.showToast = function(message, type = 'success') {
+        const container = document.getElementById('toastRoot');
+        if (!container) return;
         
-        // Cek semua method card
-        const cards = document.querySelectorAll('.method-card');
-        console.log('Method cards found:', cards.length);
+        const toast = document.createElement('div');
+        toast.className = `toast-notification toast-${type}`;
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+        toast.innerHTML = `<i class="fas ${icon}" style="font-size:18px"></i><span style="flex:1">${message}</span><button onclick="this.parentElement.remove()" style="background:none;border:none;color:#A0A0B0;cursor:pointer"><i class="fas fa-times"></i></button>`;
         
-        cards.forEach((card, i) => {
-            const method = card.getAttribute('data-method');
-            const rect = card.getBoundingClientRect();
-            console.log(`Card ${i} (${method}): width=${rect.width}, height=${rect.height}, visible=${rect.width > 0 && rect.height > 0}`);
-        });
-        
-        // Cek grid
-        const grid = document.querySelector('.methods-grid');
-        if (grid) {
-            const styles = window.getComputedStyle(grid);
-            console.log('Grid display:', styles.display);
-            console.log('Grid template columns:', styles.gridTemplateColumns);
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    };
+})();
+
+// ========================================
+// SIMPLE COPY
+// ========================================
+(function() {
+    window.copyText = async function(text, btn) {
+        try {
+            await navigator.clipboard.writeText(text);
+            window.showToast('✅ Nomor berhasil disalin!', 'success');
+            if (btn) {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
+                setTimeout(() => btn.innerHTML = originalText, 2000);
+            }
+            return true;
+        } catch(e) {
+            window.showToast('❌ Gagal menyalin', 'error');
+            return false;
         }
+    };
+})();
+
+// ========================================
+// MAIN UI
+// ========================================
+(function() {
+    // Data
+    const methods = {
+        qris: {
+            imagePath: 'https://placehold.co/400x400/12121A/00E5FF?text=QRIS',
+            nominal: 'Rp 0 - Rp 10.000.000'
+        },
+        dana: { number: '+62 812 3456 7890', name: 'Payment Center' },
+        seabank: { number: '1234 5678 9012 3456', name: 'PT Payment Center' }
+    };
+    
+    // Generate Modal
+    function showModal(method) {
+        const modalRoot = document.getElementById('modalRoot');
+        if (!modalRoot) return;
+        
+        let html = '';
+        
+        if (method === 'qris') {
+            html = `
+                <div class="modal-backdrop" onclick="closeModal()"></div>
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <div class="modal-title"><i class="fas fa-qrcode"></i> QRIS Payment</div>
+                        <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="qris-image-wrapper">
+                            <img src="${methods.qris.imagePath}" class="qris-image" alt="QRIS">
+                        </div>
+                        <div class="qris-instruction">
+                            <span class="instruction-step"><i class="fas fa-mobile-alt"></i> Buka App</span>
+                            <span>→</span>
+                            <span class="instruction-step"><i class="fas fa-camera"></i> Scan QRIS</span>
+                            <span>→</span>
+                            <span class="instruction-step"><i class="fas fa-check"></i> Bayar</span>
+                        </div>
+                        <div class="info-note"><i class="fas fa-shield-alt"></i> Scan menggunakan aplikasi resmi</div>
+                    </div>
+                    <div class="modal-footer"><i class="fas fa-clock"></i> QRIS valid 24 jam</div>
+                </div>
+            `;
+        } else if (method === 'dana') {
+            html = `
+                <div class="modal-backdrop" onclick="closeModal()"></div>
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <div class="modal-title"><i class="fas fa-wallet"></i> DANA</div>
+                        <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="method-detail">
+                            <div class="method-icon-large"><i class="fas fa-wallet"></i></div>
+                            <h3 class="method-name">DANA</h3>
+                            <div class="method-status"><i class="fas fa-circle"></i> Aktif</div>
+                            <div class="number-container">
+                                <div class="number-value">${methods.dana.number}</div>
+                            </div>
+                            <button class="copy-button" onclick="copyText('${methods.dana.number}', this)"><i class="fas fa-copy"></i> Salin Nomor</button>
+                            <div class="info-note"><i class="fas fa-info-circle"></i> Pastikan nomor tujuan sesuai</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><i class="fas fa-bolt"></i> Transaksi 24 jam</div>
+                </div>
+            `;
+        } else if (method === 'seabank') {
+            html = `
+                <div class="modal-backdrop" onclick="closeModal()"></div>
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <div class="modal-title"><i class="fas fa-university"></i> SeaBank</div>
+                        <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="method-detail">
+                            <div class="method-icon-large"><i class="fas fa-university"></i></div>
+                            <h3 class="method-name">SeaBank</h3>
+                            <div class="method-status"><i class="fas fa-circle"></i> Aktif</div>
+                            <div class="number-container">
+                                <div class="number-value">${methods.seabank.number}</div>
+                            </div>
+                            <button class="copy-button" onclick="copyText('${methods.seabank.number}', this)"><i class="fas fa-copy"></i> Salin Nomor Rekening</button>
+                            <div class="info-note"><i class="fas fa-info-circle"></i> Pastikan nomor rekening tujuan sesuai</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><i class="fas fa-bolt"></i> Transfer instan 24 jam</div>
+                </div>
+            `;
+        }
+        
+        modalRoot.innerHTML = html;
+        modalRoot.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
+    
+    window.closeModal = function() {
+        const modalRoot = document.getElementById('modalRoot');
+        modalRoot.innerHTML = '';
+        modalRoot.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+    
+    // Event Listeners
+    document.querySelectorAll('.method-card[data-method]').forEach(card => {
+        const method = card.getAttribute('data-method');
+        if (method !== 'other') {
+            card.addEventListener('click', () => showModal(method));
+        }
+    });
+    
+    // Other methods panel
+    const otherCard = document.querySelector('.method-card[data-method="other"]');
+    const otherPanel = document.getElementById('otherMethodsPanel');
+    const panelClose = document.getElementById('panelCloseBtn');
+    
+    if (otherCard) {
+        otherCard.addEventListener('click', () => {
+            otherPanel.classList.toggle('active');
+        });
+    }
+    
+    if (panelClose) {
+        panelClose.addEventListener('click', () => {
+            otherPanel.classList.remove('active');
+        });
+    }
+    
+    // Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
+    
+    // Last updated
+    const dateSpan = document.getElementById('lastUpdated');
+    if (dateSpan) {
+        const now = new Date();
+        dateSpan.textContent = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+    
+    console.log('✅ Payment Center loaded');
 })();
 </script>
-    
-    <script defer src="js/toast.js"></script>
-    <script defer src="js/copy.js"></script>
-    <script defer src="js/ui.js"></script>
-    
-    <!-- Initialization Script untuk lastUpdated -->
-    <script>
-        // Set tanggal terakhir update otomatis
-        (function() {
-            const lastUpdatedSpan = document.getElementById('lastUpdated');
-            if (lastUpdatedSpan) {
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                const date = new Date();
-                lastUpdatedSpan.textContent = date.toLocaleDateString('id-ID', options);
-            }
-        })();
-    </script>
-    
+
 </body>
 </html>
