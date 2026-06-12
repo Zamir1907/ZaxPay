@@ -11,28 +11,24 @@
     // ----------------------------------------
     
     const state = {
-        // Data metode pembayaran
         methods: {
             qris: {
-                imagePath: 'assets/images/qris-placeholder.png', // Ganti dengan QRIS asli Anda
+                imagePath: 'assets/images/qris-placeholder.png', 
                 nominal: 'Rp 0 - Rp 10.000.000',
                 instruction: 'Scan QRIS menggunakan aplikasi bank atau e-wallet'
             },
             dana: {
-                number: '+62 852 3873 2641', // Ganti dengan nomor DANA asli Anda
+                number: '+62 852 3873 2641', 
                 name: 'Zacky Mirzadinata'
             },
             seabank: {
-                number: '9015 1315 0038', // Ganti dengan nomor SeaBank asli Anda
-                name: 'Zacky Mirzadinata' // Ganti dengan nama penerima SeaBank asli Anda
+                number: '9015 1315 0038', 
+                name: 'Zacky Mirzadinata' 
             }
         },
         
-        // Modal state
         currentModal: null,
         isModalOpen: false,
-        
-        // Scrollbar width (untuk prevent body scroll)
         scrollbarWidth: 0
     };
     
@@ -54,9 +50,6 @@
     // HELPER FUNCTIONS
     // ----------------------------------------
     
-    /**
-     * Hitung scrollbar width untuk mencegah layout shift
-     */
     function getScrollbarWidth() {
         const div = document.createElement('div');
         div.style.overflow = 'scroll';
@@ -70,9 +63,6 @@
         return width;
     }
     
-    /**
-     * Prevent body scroll saat modal terbuka
-     */
     function preventBodyScroll(shouldPrevent) {
         if (shouldPrevent) {
             state.scrollbarWidth = getScrollbarWidth();
@@ -86,9 +76,6 @@
         }
     }
     
-    /**
-     * Render modal ke DOM
-     */
     function renderModal(modalHTML) {
         if (!dom.modalRoot) return;
         dom.modalRoot.innerHTML = modalHTML;
@@ -96,13 +83,9 @@
         state.isModalOpen = true;
         preventBodyScroll(true);
         
-        // Attach event listeners setelah modal di-render
         attachModalEventListeners();
     }
     
-    /**
-     * Close modal
-     */
     function closeModal() {
         if (!dom.modalRoot || !state.isModalOpen) return;
         
@@ -117,36 +100,26 @@
         }, 200);
     }
     
-    /**
-     * Handle escape key
-     */
     function handleEscapeKey(e) {
         if (e.key === 'Escape' && state.isModalOpen) {
             closeModal();
         }
     }
     
-    /**
-     * Handle click outside modal
-     */
     function handleOutsideClick(e) {
         if (!state.isModalOpen) return;
-        const modalContainer = dom.modalRoot?.querySelector('.modal-container');
-        if (modalContainer && !modalContainer.contains(e.target)) {
+        // Jika yang diklik adalah backdrop langsung, tutup modal
+        if (e.target.classList.contains('modal-backdrop') || e.target === dom.modalRoot) {
             closeModal();
         }
     }
     
-    /**
-     * Attach event listeners untuk modal yang aktif
-     */
     function attachModalEventListeners() {
         const closeBtn = dom.modalRoot?.querySelector('.modal-close');
         if (closeBtn) {
             closeBtn.addEventListener('click', closeModal);
         }
         
-        // Copy buttons untuk DANA & SeaBank
         const copyButtons = dom.modalRoot?.querySelectorAll('.copy-button');
         copyButtons?.forEach(btn => {
             btn.addEventListener('click', async (e) => {
@@ -155,7 +128,6 @@
                 if (number && window.copyToClipboard) {
                     const success = await window.copyToClipboard(number, btn);
                     if (success) {
-                        // Tambahkan class success untuk feedback visual
                         btn.classList.add('success');
                         setTimeout(() => {
                             btn.classList.remove('success');
@@ -164,22 +136,13 @@
                 }
             });
         });
-        
-        // Backdrop click
-        const backdrop = dom.modalRoot?.querySelector('.modal-backdrop');
-        if (backdrop) {
-            backdrop.addEventListener('click', closeModal);
-        }
     }
     
     // ----------------------------------------
     // MODAL GENERATORS
     // ----------------------------------------
     
-    /**
-     * Generate QRIS Modal HTML
-     */
-    function generateQRISModal() {
+    function generateQRISModalEnhanced() {
         const qris = state.methods.qris;
         
         return `
@@ -197,15 +160,19 @@
                     </div>
                     <div class="modal-body">
                         <div class="qris-container">
-                            <div class="qris-image-wrapper">
+                            <div class="qris-image-wrapper" id="qrisImageWrapper">
                                 <img 
                                     src="${qris.imagePath}" 
                                     alt="QRIS Code" 
                                     class="qris-image"
-                                    onerror="this.src='https://placehold.co/400x400/12121A/00E5FF?text=QRIS+Placeholder'"
+                                    id="qrisImage"
+                                    onerror="this.onerror=null; this.src='https://placehold.co/400x400/12121A/00E5FF?text=QRIS+Not+Found'; document.getElementById('qrisLoading')?.style.setProperty('display', 'none', 'important');"
+                                    onload="document.getElementById('qrisLoading')?.style.setProperty('display', 'none', 'important');"
+                                    style="display: block;"
                                 >
-                                <div class="qris-loading" style="display: none;">
+                                <div class="qris-loading" id="qrisLoading" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
                                     <i class="fas fa-spinner animate-spin"></i>
+                                    <span>Memuat QRIS...</span>
                                 </div>
                             </div>
                             
@@ -232,102 +199,22 @@
                                 <span>Nominal: ${qris.nominal}</span>
                             </div>
                             ` : ''}
+                            
+                            <div class="info-note" style="margin-top: var(--spacing-md);">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Pastikan scan QRIS dari aplikasi resmi</span>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Transaksi aman & terenkripsi</span>
+                        <i class="fas fa-clock"></i>
+                        <span>QRIS valid 24 jam</span>
                     </div>
                 </div>
             </div>
         `;
     }
-
-    /**
- * Enhanced QRIS Modal dengan loading handler
- */
-function generateQRISModalEnhanced() {
-    const qris = state.methods.qris;
     
-    return `
-        <div class="modal-backdrop"></div>
-        <div class="modal-container">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">
-                        <i class="fas fa-qrcode"></i>
-                        <span>QRIS Payment</span>
-                    </div>
-                    <button class="modal-close" aria-label="Tutup modal">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="qris-container">
-                        <div class="qris-image-wrapper" id="qrisImageWrapper">
-                            <img 
-                                src="${qris.imagePath}" 
-                                alt="QRIS Code" 
-                                class="qris-image"
-                                id="qrisImage"
-                                onerror="this.onerror=null; this.src='https://placehold.co/400x400/12121A/00E5FF?text=QRIS+Not+Found'; document.getElementById('qrisLoading')?.style.setProperty('display', 'none', 'important');"
-                                onload="document.getElementById('qrisLoading')?.style.setProperty('display', 'none', 'important');"
-                                style="display: block;"
-                            >
-                            <div class="qris-loading" id="qrisLoading" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                                <i class="fas fa-spinner animate-spin"></i>
-                                <span>Memuat QRIS...</span>
-                            </div>
-                        </div>
-                        
-                        <div class="qris-instruction">
-                            <div class="instruction-step">
-                                <i class="fas fa-mobile-alt"></i>
-                                <span>Buka Aplikasi Bank/E-Wallet</span>
-                            </div>
-                            <i class="fas fa-arrow-right"></i>
-                            <div class="instruction-step">
-                                <i class="fas fa-camera"></i>
-                                <span>Scan QRIS</span>
-                            </div>
-                            <i class="fas fa-arrow-right"></i>
-                            <div class="instruction-step">
-                                <i class="fas fa-check-circle"></i>
-                                <span>Konfirmasi Pembayaran</span>
-                            </div>
-                        </div>
-                        
-                        ${qris.nominal ? `
-                        <div class="qris-nominal">
-                            <i class="fas fa-tag"></i>
-                            <span>Nominal: ${qris.nominal}</span>
-                        </div>
-                        ` : ''}
-                        
-                        <div class="info-note" style="margin-top: var(--spacing-md);">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Pastikan scan QRIS dari aplikasi resmi</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <i class="fas fa-clock"></i>
-                    <span>QRIS valid 24 jam</span>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// Ganti panggilan generateQRISModal dengan generateQRISModalEnhanced
-// Di dalam handleMethodClick, ubah:
-// case 'qris': renderModal(generateQRISModal()); break;
-// Menjadi:
-// case 'qris': renderModal(generateQRISModalEnhanced()); break;
-    
-    /**
-     * Generate DANA Modal HTML
-     */
     function generateDANAModal() {
         const dana = state.methods.dana;
         
@@ -387,9 +274,6 @@ function generateQRISModalEnhanced() {
         `;
     }
     
-    /**
-     * Generate SeaBank Modal HTML
-     */
     function generateSeaBankModal() {
         const seabank = state.methods.seabank;
         
@@ -453,13 +337,10 @@ function generateQRISModalEnhanced() {
     // EVENT HANDLERS
     // ----------------------------------------
     
-    /**
-     * Handle method card click
-     */
     function handleMethodClick(method) {
         switch(method) {
             case 'qris':
-                renderModal(generateQRISModal());
+                renderModal(generateQRISModalEnhanced()); // Diperbarui ke fungsi Enhanced
                 state.currentModal = 'qris';
                 break;
             case 'dana':
@@ -475,9 +356,6 @@ function generateQRISModalEnhanced() {
         }
     }
     
-    /**
-     * Handle Metode Lainnya panel toggle
-     */
     function toggleOtherMethodsPanel() {
         if (!dom.otherPanel) return;
         
@@ -485,31 +363,22 @@ function generateQRISModalEnhanced() {
         
         if (isActive) {
             dom.otherPanel.classList.remove('active');
-            // Optional: animate close
         } else {
             dom.otherPanel.classList.add('active');
-            // Scroll ke panel setelah terbuka
             setTimeout(() => {
                 dom.otherPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
         }
     }
     
-    /**
-     * Close other methods panel
-     */
     function closeOtherMethodsPanel() {
         if (dom.otherPanel) {
             dom.otherPanel.classList.remove('active');
         }
     }
     
-    /**
-     * Disable right click pada elemen sensitif
-     */
     function disableRightClick(e) {
-        // Hanya disable pada area yang berisi informasi sensitif
-        const sensitiveAreas = ['.number-container', '.number-value', '.method-card'];
+        const sensitiveAreas = ['.number-container', '.number-value', '.method-card', '.qris-image-wrapper'];
         let target = e.target;
         
         while (target && target !== document.body) {
@@ -524,12 +393,8 @@ function generateQRISModalEnhanced() {
         return true;
     }
     
-    /**
-     * Disable drag pada gambar
-     */
     function disableDrag(e) {
-        const target = e.target;
-        if (target.tagName === 'IMG') {
+        if (e.target.tagName === 'IMG') {
             e.preventDefault();
             return false;
         }
@@ -540,11 +405,7 @@ function generateQRISModalEnhanced() {
     // INITIALIZATION
     // ----------------------------------------
     
-    /**
-     * Setup all event listeners
-     */
     function setupEventListeners() {
-        // Method cards
         if (dom.methodCards) {
             dom.methodCards.forEach(card => {
                 const method = card.getAttribute('data-method');
@@ -554,52 +415,38 @@ function generateQRISModalEnhanced() {
             });
         }
         
-        // Metode Lainnya card
         if (dom.otherMethodCard) {
             dom.otherMethodCard.addEventListener('click', toggleOtherMethodsPanel);
         }
         
-        // Panel close button
         if (dom.panelCloseBtn) {
             dom.panelCloseBtn.addEventListener('click', closeOtherMethodsPanel);
         }
         
-        // Escape key untuk modal
         document.addEventListener('keydown', handleEscapeKey);
         
-        // Click outside untuk modal (delegated ke modal root)
         if (dom.modalRoot) {
             dom.modalRoot.addEventListener('click', handleOutsideClick);
         }
         
-        // Proteksi: disable right click pada area sensitif
         document.addEventListener('contextmenu', disableRightClick);
-        
-        // Proteksi: disable drag pada gambar
         document.addEventListener('dragstart', disableDrag);
     }
     
-    /**
-     * Initialize UI Controller
-     */
     function init() {
-        // Get DOM elements
         dom.modalRoot = document.getElementById('modalRoot');
         dom.toastRoot = document.getElementById('toastRoot');
-        dom.methodCards = document.querySelectorAll('.method-card:not(.method-other-wrapper)');
-        dom.otherMethodCard = document.querySelector('.method-card.method-other-wrapper');
+        dom.methodCards = document.querySelectorAll('.method-card');
+        dom.otherMethodCard = document.querySelector('.method-card[data-method="other"]') || document.querySelector('.method-other-wrapper');
         dom.otherPanel = document.getElementById('otherMethodsPanel');
         dom.panelCloseBtn = document.getElementById('panelCloseBtn');
         dom.body = document.body;
         
-        // Log jika ada yang missing
         if (!dom.modalRoot) console.warn('Modal root not found');
         if (!dom.toastRoot) console.warn('Toast root not found');
         
-        // Setup event listeners
         setupEventListeners();
         
-        // Jika QRIS image placeholder tidak ada, set fallback
         const qrisImagePath = state.methods.qris.imagePath;
         if (qrisImagePath === 'assets/images/qris-placeholder.png') {
             console.warn('⚠️ QRIS image masih menggunakan placeholder. Ganti dengan QRIS asli Anda di ui.js -> state.methods.qris.imagePath');
@@ -608,7 +455,6 @@ function generateQRISModalEnhanced() {
         console.log('✅ Payment Center UI initialized');
     }
     
-    // Export public API (opsional, untuk debugging)
     window.paymentCenter = {
         state,
         closeModal,
@@ -616,7 +462,6 @@ function generateQRISModalEnhanced() {
         toggleOtherPanel: toggleOtherMethodsPanel
     };
     
-    // Run initialization ketika DOM ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
