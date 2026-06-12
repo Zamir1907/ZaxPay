@@ -366,106 +366,92 @@
 }
 
 /* ----------------------------------------
-   RESPONSIVE MODAL
+   MOBILE MODAL EMERGENCY FIX
 ---------------------------------------- */
-
-/* Tablet */
 @media (max-width: 768px) {
     .modal-container {
-        max-width: 90%;
-        width: 90%;
+        width: calc(100% - 2rem) !important;
+        max-width: none !important;
+        margin: 0 auto !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+    
+    .modal-content {
+        border-radius: 1rem !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
     }
     
     .modal-header {
-        padding: var(--spacing-md) var(--spacing-lg);
+        padding: 0.75rem 1rem !important;
+        position: sticky !important;
+        top: 0 !important;
+        background: var(--bg-glass-solid) !important;
+        z-index: 10 !important;
     }
     
     .modal-body {
-        padding: var(--spacing-lg);
+        padding: 1rem !important;
+        max-height: calc(90vh - 120px) !important;
+        overflow-y: auto !important;
     }
     
-    .modal-title {
-        font-size: var(--font-size-lg);
+    .modal-footer {
+        padding: 0.75rem 1rem !important;
+        position: sticky !important;
+        bottom: 0 !important;
+        background: var(--bg-glass-solid) !important;
+    }
+    
+    /* QRIS image fix */
+    .qris-image-wrapper {
+        padding: 1rem !important;
     }
     
     .qris-image {
-        max-width: 220px;
+        max-width: 200px !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+    
+    .qris-instruction {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
     }
     
     .instruction-step {
-        font-size: var(--font-size-xs);
+        font-size: 0.75rem !important;
+    }
+    
+    .fa-arrow-right {
+        transform: rotate(90deg) !important;
+    }
+    
+    /* Number container fix */
+    .number-container {
+        padding: 0.75rem !important;
     }
     
     .number-value {
-        font-size: var(--font-size-lg);
+        font-size: 0.875rem !important;
+        word-break: break-all !important;
     }
     
     .copy-button {
-        padding: var(--spacing-sm) var(--spacing-lg);
-        font-size: var(--font-size-sm);
-    }
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-    .modal-container {
-        width: 95%;
-        max-width: 95%;
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 0.75rem !important;
     }
     
-    .modal-body {
-        padding: var(--spacing-md);
-    }
-    
-    .modal-header {
-        padding: var(--spacing-md);
-    }
-    
-    .modal-close {
-        width: 32px;
-        height: 32px;
-    }
-    
-    .qris-image-wrapper {
-        padding: var(--spacing-md);
-    }
-    
-    .qris-image {
-        max-width: 180px;
-    }
-    
-    .instruction-step {
-        flex-direction: column;
-        text-align: center;
-    }
-    
+    /* Method icon fix */
     .method-icon-large {
-        width: 60px;
-        height: 60px;
+        width: 60px !important;
+        height: 60px !important;
     }
     
     .method-icon-large i {
-        font-size: 28px;
-    }
-    
-    .number-container {
-        padding: var(--spacing-md);
-    }
-    
-    .number-value {
-        font-size: var(--font-size-md);
-        word-break: break-all;
-    }
-    
-    .copy-button {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .info-note {
-        font-size: 10px;
-        flex-wrap: wrap;
-        text-align: center;
+        font-size: 28px !important;
     }
 }
 
