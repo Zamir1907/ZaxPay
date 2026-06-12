@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Payment Center - Informasi metode pembayaran resmi">
+    <meta name="theme-color" content="#0A0A0F">
+    
+    <title>Payment Center | Metode Pembayaran Resmi</title>
+    
+    <!-- Font Awesome 6 (Free CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animation.css">
+    <link rel="stylesheet" href="css/modal.css">
+</head>
+<body>
+    
+    <!-- Background Gradient untuk atmosfer premium -->
+    <div class="bg-gradient" aria-hidden="true"></div>
+    
+    <!-- Main Container -->
+    <main class="payment-center">
+        
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-badge glass">
+                <i class="fas fa-shield-alt"></i>
+                <span>Payment Center Resmi</span>
+            </div>
+            <h1 class="header-title">
+                Metode Pembayaran
+                <span class="title-accent">Premium</span>
+            </h1>
+            <p class="header-subtitle">
+                Pilih metode pembayaran yang tersedia<br>
+                Informasi akan ditampilkan setelah pemilihan
+            </p>
+        </header>
+        
+        <!-- Payment Methods Grid -->
+        <div class="methods-grid">
+            
+            <!-- Card: QRIS (Priority) -->
+            <div class="method-card premium" data-method="qris">
+                <div class="card-badge">Rekomendasi</div>
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <h3 class="card-title">QRIS</h3>
+                <p class="card-description">Scan menggunakan aplikasi<br>bank atau e-wallet kesayangan Anda</p>
+                <div class="card-footer">
+                    <span class="pill-tag">Instant</span>
+                    <span class="pill-tag">All Bank</span>
+                </div>
+                <div class="card-hover-glow"></div>
+            </div>
+            
+            <!-- Card: DANA -->
+            <div class="method-card" data-method="dana">
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <h3 class="card-title">DANA</h3>
+                <p class="card-description">Dompet digital<br>pilihan utama</p>
+                <div class="card-footer">
+                    <span class="pill-tag">E-Wallet</span>
+                    <span class="pill-tag">24 Jam</span>
+                </div>
+                <div class="card-hover-glow"></div>
+            </div>
+            
+            <!-- Card: SeaBank -->
+            <div class="method-card" data-method="seabank">
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h3 class="card-title">SeaBank</h3>
+                <p class="card-description">Transfer Bank<br>cepat dan aman</p>
+                <div class="card-footer">
+                    <span class="pill-tag">Bank Transfer</span>
+                    <span class="pill-tag">Instant</span>
+                </div>
+                <div class="card-hover-glow"></div>
+            </div>
+            
+            <!-- Card: Metode Lainnya (Expandable) -->
+            <div class="method-card method-other-wrapper" data-method="other">
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <h3 class="card-title">Metode Lainnya</h3>
+                <p class="card-description">Klik untuk melihat<br>opsi pembayaran tambahan</p>
+                <div class="card-footer">
+                    <span class="pill-tag coming-soon">Coming Soon</span>
+                </div>
+                <div class="card-hover-glow"></div>
+            </div>
+            
+        </div>
+        
+        <!-- Expandable Section untuk Metode Lainnya -->
+        <div class="other-methods-panel" id="otherMethodsPanel">
+            <div class="panel-header">
+                <i class="fas fa-credit-card"></i>
+                <span>Metode Pembayaran Tambahan</span>
+                <button class="panel-close" id="panelCloseBtn" aria-label="Tutup panel">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="other-methods-grid">
+                
+                <!-- Bank Transfer (Coming Soon) -->
+                <div class="other-method-item disabled" data-method="bank_transfer">
+                    <div class="other-icon">
+                        <i class="fas fa-building-columns"></i>
+                    </div>
+                    <div class="other-info">
+                        <h4>Bank Transfer</h4>
+                        <p>BCA, Mandiri, BNI, BRI</p>
+                    </div>
+                    <div class="coming-soon-badge">
+                        <i class="fas fa-clock"></i>
+                        <span>Segera</span>
+                    </div>
+                </div>
+                
+                <!-- E-Wallet (Coming Soon) -->
+                <div class="other-method-item disabled" data-method="ewallet">
+                    <div class="other-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="other-info">
+                        <h4>E-Wallet Lainnya</h4>
+                        <p>OVO, GoPay, LinkAja</p>
+                    </div>
+                    <div class="coming-soon-badge">
+                        <i class="fas fa-clock"></i>
+                        <span>Segera</span>
+                    </div>
+                </div>
+                
+                <!-- Virtual Account (Coming Soon) -->
+                <div class="other-method-item disabled" data-method="va">
+                    <div class="other-icon">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="other-info">
+                        <h4>Virtual Account</h4>
+                        <p>Permata, Mandiri, BCA VA</p>
+                    </div>
+                    <div class="coming-soon-badge">
+                        <i class="fas fa-clock"></i>
+                        <span>Segera</span>
+                    </div>
+                </div>
+                
+            </div>
+            <p class="panel-footer-note">
+                <i class="fas fa-info-circle"></i>
+                Metode pembayaran tambahan akan segera hadir
+            </p>
+        </div>
+        
+        <!-- Footer Info -->
+        <footer class="footer">
+            <div class="footer-divider"></div>
+            <div class="footer-content">
+                <div class="security-badge">
+                    <i class="fas fa-lock"></i>
+                    <span>Informasi Pembayaran Resmi</span>
+                </div>
+                <p class="footer-updated">
+                    <i class="fas fa-sync-alt"></i>
+                    Terakhir diperbarui: <span id="lastUpdated">Januari 2026</span>
+                </p>
+                <p class="footer-copyright">
+                    &copy; 2026 Payment Center
+                </p>
+            </div>
+        </footer>
+        
+    </main>
+    
+    <!-- Modal Root (Container untuk modal dinamis) -->
+    <div id="modalRoot" class="modal-root"></div>
+    
+    <!-- Toast Root (Container untuk notifikasi) -->
+    <div id="toastRoot" class="toast-root"></div>
+    
+    <!-- JavaScript Modules -->
+    <script defer src="js/toast.js"></script>
+    <script defer src="js/copy.js"></script>
+    <script defer src="js/ui.js"></script>
+    
+    <!-- Initialization Script untuk lastUpdated -->
+    <script>
+        // Set tanggal terakhir update otomatis
+        (function() {
+            const lastUpdatedSpan = document.getElementById('lastUpdated');
+            if (lastUpdatedSpan) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const date = new Date();
+                lastUpdatedSpan.textContent = date.toLocaleDateString('id-ID', options);
+            }
+        })();
+    </script>
+    
+</body>
+</html>
