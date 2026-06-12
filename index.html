@@ -191,6 +191,33 @@
     <div id="toastRoot" class="toast-root"></div>
     
     <!-- JavaScript Modules -->
+<!-- Debug overlay untuk mobile (hapus setelah fix) -->
+<script>
+(function() {
+    if (window.innerWidth <= 768) {
+        console.log('📱 Mobile mode aktif - Width:', window.innerWidth);
+        
+        // Cek semua method card
+        const cards = document.querySelectorAll('.method-card');
+        console.log('Method cards found:', cards.length);
+        
+        cards.forEach((card, i) => {
+            const method = card.getAttribute('data-method');
+            const rect = card.getBoundingClientRect();
+            console.log(`Card ${i} (${method}): width=${rect.width}, height=${rect.height}, visible=${rect.width > 0 && rect.height > 0}`);
+        });
+        
+        // Cek grid
+        const grid = document.querySelector('.methods-grid');
+        if (grid) {
+            const styles = window.getComputedStyle(grid);
+            console.log('Grid display:', styles.display);
+            console.log('Grid template columns:', styles.gridTemplateColumns);
+        }
+    }
+})();
+</script>
+    
     <script defer src="js/toast.js"></script>
     <script defer src="js/copy.js"></script>
     <script defer src="js/ui.js"></script>
