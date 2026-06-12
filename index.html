@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <meta name="description" content="Payment Center - Informasi metode pembayaran resmi">
     <meta name="theme-color" content="#0A0A0F">
     
@@ -86,8 +86,8 @@
                 <div class="card-hover-glow"></div>
             </div>
             
-            <!-- Card: Metode Lainnya -->
-            <div class="method-card" data-method="other">
+            <!-- Card: Metode Lainnya (Expandable) -->
+            <div class="method-card method-other-wrapper" data-method="other">
                 <div class="card-icon-wrapper">
                     <i class="fas fa-ellipsis-h"></i>
                 </div>
@@ -190,10 +190,23 @@
     <!-- Toast Root (Container untuk notifikasi) -->
     <div id="toastRoot" class="toast-root"></div>
     
-    <!-- JavaScript Modules (urutan PENTING: toast.js → copy.js → ui.js) -->
+    <!-- JavaScript Modules -->
     <script defer src="js/toast.js"></script>
     <script defer src="js/copy.js"></script>
     <script defer src="js/ui.js"></script>
+    
+    <!-- Initialization Script untuk lastUpdated -->
+    <script>
+        // Set tanggal terakhir update otomatis
+        (function() {
+            const lastUpdatedSpan = document.getElementById('lastUpdated');
+            if (lastUpdatedSpan) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const date = new Date();
+                lastUpdatedSpan.textContent = date.toLocaleDateString('id-ID', options);
+            }
+        })();
+    </script>
     
 </body>
 </html>
