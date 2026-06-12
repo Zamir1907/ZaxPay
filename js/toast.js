@@ -437,7 +437,40 @@
             .toast-warning .toast-icon i {
                 color: ${TOAST_TYPES.warning.color};
             }
-            
+            // Di dalam getToastStyles(), tambahkan:
+@media (max-width: 768px) {
+    .toast-notification {
+        width: calc(100vw - 32px) !important;
+        max-width: none !important;
+        right: 16px !important;
+        left: 16px !important;
+        margin: 0 auto !important;
+    }
+    
+    .toast-message {
+        font-size: 13px !important;
+    }
+    
+    .toast-icon i {
+        font-size: 18px !important;
+    }
+}
+
+/* Force toast container di mobile */
+#toastRoot {
+    position: fixed !important;
+    bottom: 16px !important;
+    right: 16px !important;
+    left: auto !important;
+    z-index: 9999 !important;
+}
+
+@media (max-width: 768px) {
+    #toastRoot {
+        left: 16px !important;
+        right: 16px !important;
+    }
+}
             /* Mobile Responsive */
             @media (max-width: 768px) {
                 .toast-notification {
