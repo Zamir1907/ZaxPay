@@ -55,6 +55,39 @@
     --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
 }
 
+/* Hilangkan highlight biru saat ditekan */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Tidak bisa seleksi teks */
+* {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Safari iPhone: hilangkan menu Copy/Save */
+* {
+    -webkit-touch-callout: none;
+}
+
+/* Gambar tidak bisa didrag */
+img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+}
+
+/* Tombol tidak ada outline saat focus */
+button,
+a,
+input,
+textarea {
+    outline: none;
+}
+
 body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
