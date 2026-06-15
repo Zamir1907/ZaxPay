@@ -2,6 +2,16 @@
    PAYMENT CENTER - UI CONTROLLER
    Modal Management | Event Handlers | State Management
    ======================================== */
+// Matikan klik kanan
+document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+});
+
+// Matikan drag
+document.addEventListener("dragstart", (e) => {
+    e.preventDefault();
+});
+
 
 (function() {
     'use strict';
